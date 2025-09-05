@@ -1,0 +1,25 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  font-size: 42px;
+  color: red;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.char-name {
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.dialogue {
+  margin-left: 20px;
+}
+
+.stage-directions {
+  margin-left: 40px;
+  font-style: italic;
+  color: gray;
+}
