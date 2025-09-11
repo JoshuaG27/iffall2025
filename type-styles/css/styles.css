@@ -1,0 +1,53 @@
+
+/* Base page styling */
+body {
+  font-family: 'Raleway', sans-serif;
+  background: white;
+  color: grey;
+  font-size: 48px;
+  padding: 30px;
+  margin: auto;
+  line-height: 1.5;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.group {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.group h2 {
+  margin-bottom: 1rem;
+  color: #444;
+  text-align: center;
+}
+
+/* Font Weight */
+.font-weight .light { font-weight: 300; }
+.font-weight .normal { font-weight: 400; }
+.font-weight .bold { font-weight: 700; }
+
+/* Font Style */
+.font-style .normal-style { font-style: normal; }
+.font-style .italic { font-style: italic; }
+
+/* Letter Spacing */
+.letter-spacing .tight { letter-spacing: -5px; }
+.letter-spacing .normal-spacing { letter-spacing: 0; }
+.letter-spacing .wide { letter-spacing: 3px; }
+
+/* Text Transform */
+.text-transform .lowercase { text-transform: lowercase; }
+.text-transform .uppercase { text-transform: uppercase; }
+.text-transform .capitalize { text-transform: capitalize; }
+
+/* Text Decoration */
+.text-decoration .underline { text-decoration: underline; }
+.text-decoration .line-through { text-decoration: line-through; }
+.text-decoration .overline { text-decoration: overline; }
