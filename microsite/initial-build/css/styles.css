@@ -7,7 +7,7 @@
 
 body {
     font-family: "cofo-sans-pixel", sans-serif;
-    background: linear-gradient(135deg, #ff8c42 0%, #ffa726 50%, #ffb84d 100%);
+    background: linear-gradient(135deg, #ff6b1a 0%, #ff8c42 50%, #ffa726 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -18,26 +18,25 @@ body {
 /* ==================== LAYOUT CONTAINER ==================== */
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1300px;
     display: flex;
     flex-direction: column;
     gap: 0;
-    background: linear-gradient(135deg, #ff8c42 0%, #ffa726 50%, #ffb84d 100%);
-    outline: 4px solid white;
-    outline-offset: -4px;
+    background: linear-gradient(135deg, #ff6b1a 0%, #ff8c42 50%, #ffa726 100%);
 }
 
 /* ==================== HEADER ==================== */
 header {
     background: transparent;
     padding: 30px 40px 20px 40px;
-    border-bottom: 4px solid white;
+    border-bottom: 2px solid white;
 }
 
 h1 {
     font-size: 60px;
     color: white;
-    font-weight: 700;
+    font-weight: 400;
+    font-style: normal;
     letter-spacing: -2px;
     text-transform: lowercase;
     font-family: "shuriken-std", sans-serif;
@@ -46,6 +45,7 @@ h1 {
 h1 .the {
     font-size: 36px;
     font-weight: 400;
+    font-style: normal;
     font-family: "shuriken-std", sans-serif;
 }
 
@@ -54,6 +54,8 @@ h2 {
     color: white;
     font-size: 20px;
     margin-bottom: 15px;
+    font-weight: 400;
+    font-style: normal;
 }
 
 h3 {
@@ -62,13 +64,15 @@ h3 {
     font-size: 16px;
     margin-top: 20px;
     margin-bottom: 10px;
+    font-weight: 400;
+    font-style: normal;
 }
 
 /* ==================== NAVIGATION ==================== */
 nav {
     background: transparent;
     display: flex;
-    border-bottom: 4px solid white;
+    border-top: 2px solid white;
 }
 
 nav button {
@@ -81,12 +85,18 @@ nav button {
     font-size: 14px;
     cursor: pointer;
     border-right: 2px solid white;
-    transition: 0.3s;
+    border-bottom: 2px solid white;
+    transition: background 0.3s;
     text-transform: capitalize;
+    position: relative;
+}
+
+nav button:first-child {
+    border-left: 2px solid white;
 }
 
 nav button:last-child {
-    border-right: none;
+    border-right: 2px solid white;
 }
 
 nav button:hover {
@@ -95,33 +105,47 @@ nav button:hover {
 
 nav button.active {
     background: transparent;
-    border: 2px solid white;
+    border-top: none;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
     border-bottom: none;
-    margin-bottom: -2px;
+    margin-top: -2px;
+    padding-top: 14px;
 }
 
 nav button::before {
-    content: '⏸ ';
+    content: '⏸';
     margin-right: 6px;
-    font-size: 12px;
+    font-size: 16px;
+    font-weight: 100;
+    -webkit-text-stroke: 1px white;
+    -webkit-text-fill-color: transparent;
+    text-stroke: 1px white;
+    color: transparent;
 }
 
 nav button.active::before {
-    content: '▶ ';
+    content: '▶';
     margin-right: 6px;
-    font-size: 12px;
+    font-size: 16px;
+    font-weight: 100;
+    -webkit-text-stroke: 1px white;
+    -webkit-text-fill-color: transparent;
+    text-stroke: 1px white;
+    color: transparent;
 }
 
 /* ==================== CONTENT WRAPPER ==================== */
 .content-wrapper {
     background: transparent;
-    border: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
     border-top: none;
     height: 450px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    margin: 0 2px 2px 2px;
 }
 
 .content {
@@ -180,15 +204,16 @@ nav button.active::before {
 
 .home-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: contain;
 }
 
 .home-caption {
     text-align: center;
-    padding: 8px;
+    padding: 12px 8px;
     background: #2d5016;
-    font-size: 12px;
+    font-size: 14px;
     color: white;
     font-family: "cofo-sans-pixel", sans-serif;
 }
@@ -201,7 +226,7 @@ nav button.active::before {
 }
 
 .history-text {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.5;
     color: white;
     font-family: "cofo-sans-pixel", sans-serif;
@@ -217,6 +242,31 @@ nav button.active::before {
     gap: 20px;
 }
 
+.history-images > .history-image {
+    width: 100%;
+    border: 20px solid #2d5016;
+    background: #2d5016;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.history-images > .history-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.history-images > .history-image .history-caption {
+    text-align: center;
+    padding: 12px 8px;
+    background: #2d5016;
+    font-size: 14px;
+    color: white;
+    font-family: "cofo-sans-pixel", sans-serif;
+    display: block;
+}
+
 .history-image {
     width: 100%;
     border: 20px solid #2d5016;
@@ -226,7 +276,7 @@ nav button.active::before {
 
 .history-image-bottom {
     width: 100%;
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 .history-image-left {
@@ -239,21 +289,22 @@ nav button.active::before {
 
 .history-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: contain;
 }
 
 .history-caption {
     text-align: center;
-    padding: 8px;
+    padding: 12px 8px;
     background: #2d5016;
-    font-size: 12px;
+    font-size: 14px;
     color: white;
     font-family: "cofo-sans-pixel", sans-serif;
 }
 
 .history-sidebar {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.5;
     color: white;
     font-family: "cofo-sans-pixel", sans-serif;
@@ -270,6 +321,8 @@ nav button.active::before {
     font-size: 16px;
     margin-top: 20px;
     margin-bottom: 10px;
+    font-weight: 400;
+    font-style: normal;
 }
 
 /* ==================== MEMBERS PAGE ==================== */
@@ -289,9 +342,9 @@ nav button.active::before {
 }
 
 .member-image {
-    width: 80px;
-    height: 80px;
-    border: 4px solid #2d5016;
+    width: 100px;
+    height: 100px;
+    border: 8px solid #2d5016;
     background: #2d5016;
     flex-shrink: 0;
     overflow: hidden;
@@ -300,12 +353,12 @@ nav button.active::before {
 .member-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
 .member-name {
-    font-size: 14px;
+    font-size: 16px;
     color: white;
     font-family: "cofo-sans-pixel", sans-serif;
     font-weight: 400;
@@ -315,8 +368,8 @@ nav button.active::before {
 /* ==================== MUSIC PAGE ==================== */
 .albums-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 35px;
 }
 
 .album-card {
@@ -327,16 +380,19 @@ nav button.active::before {
 .album-cover {
     width: 100%;
     aspect-ratio: 1;
-    border: 4px solid #2d5016;
+    border: 8px solid #2d5016;
     background: #2d5016;
     margin-bottom: 10px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .album-cover img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
@@ -346,7 +402,7 @@ nav button.active::before {
 }
 
 .album-title {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 400;
     margin-bottom: 3px;
     font-family: "cofo-sans-pixel", sans-serif;
@@ -355,7 +411,7 @@ nav button.active::before {
 }
 
 .album-artist {
-    font-size: 10px;
+    font-size: 13px;
     color: white;
     font-family: "cofo-sans-pixel", sans-serif;
     opacity: 0.9;
@@ -369,7 +425,7 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 4px solid white;
+    border-top: 2px solid white;
 }
 
 .now-playing {
@@ -383,6 +439,8 @@ footer {
 .track-info {
     font-family: "cofo-sans-pixel", sans-serif;
     font-size: 14px;
+    flex: 1;
+    text-align: center;
 }
 
 .play-controls {
@@ -405,16 +463,23 @@ footer {
 }
 
 .play-controls button:hover {
-    background: white;
-    color: #ff8c42;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.play-controls button .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
 }
 
 .material-symbols-outlined {
-    font-size: 24px;
+    font-size: 20px;
 }
 
 /* ==================== RESPONSIVE DESIGN ==================== */
 @media (max-width: 768px) {
+    .container {
+        padding: 10px 20px;
+    }
+
     header {
         padding: 20px;
     }
@@ -428,24 +493,44 @@ footer {
     }
 
     nav {
-        flex-direction: column;
+        flex-direction: row;
+        border-top: 2px solid white;
     }
 
     nav button {
-        border-right: none;
+        flex: 1;
+        border-right: 2px solid white;
         border-bottom: 2px solid white;
+        padding: 10px 5px;
+        font-size: 11px;
+    }
+
+    nav button:first-child {
+        border-left: 2px solid white;
     }
 
     nav button:last-child {
-        border-bottom: none;
+        border-right: 2px solid white;
     }
 
     nav button.active {
-        border: 2px solid white;
+        background: transparent;
+        border-top: none;
+        border-left: 2px solid white;
+        border-right: 2px solid white;
         border-bottom: none;
-        border-left: 4px solid white;
-        margin-bottom: 0;
-        margin-left: -2px;
+        margin-top: -2px;
+        padding-top: 12px;
+    }
+
+    nav button::before {
+        font-size: 12px;
+        margin-right: 4px;
+    }
+
+    nav button.active::before {
+        font-size: 12px;
+        margin-right: 4px;
     }
 
     .content {
@@ -463,7 +548,7 @@ footer {
     }
 
     .albums-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
 
