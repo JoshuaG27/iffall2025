@@ -282,24 +282,46 @@
 
     <footer>
             <div class="track-info">
-                <div id="track-info">Click play to start listening...</div>
-                <div class="status" id="status">Ready</div>
+                <div id="track-info">Soulquarians Playlist</div>
+                <div class="status" id="status">Click play to start</div>
+                <div style="font-size: 10px; opacity: 0.7; margin-top: 8px;">
+                    Information from <a href="https://en.wikipedia.org/wiki/Soulquarians" target="_blank" style="color: white; text-decoration: underline;">Wikipedia</a>
+                </div>
             </div>
             <div class="play-controls">
-                <button id="prev-btn" title="Previous">
+                <button id="prev-btn" title="Previous track">
                     <span class="material-symbols-outlined">skip_previous</span>
                 </button>
-                <button id="play-btn" title="Play/Pause">
+                <button id="play-btn" title="Show/Hide Player">
                     <span class="material-symbols-outlined">play_arrow</span>
                 </button>
-                <button id="next-btn" title="Next">
+                <button id="next-btn" title="Next track">
                     <span class="material-symbols-outlined">skip_next</span>
                 </button>
             </div>
         </footer>
     </div>
 
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <!-- Spotify Embed Player Overlay -->
+    <div id="spotify-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="position: relative; width: 90%; max-width: 800px;">
+            <button id="close-player" style="position: absolute; top: -40px; right: 0; background: white; color: black; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'cofo-sans-pixel', sans-serif; font-size: 14px;">
+                Close Player
+            </button>
+            <iframe 
+                id="spotify-iframe"
+                style="border-radius:12px" 
+                src="https://open.spotify.com/embed/playlist/1ADJ6f0Zg0zqL45x444ex8?utm_source=generator&theme=0" 
+                width="100%" 
+                height="500" 
+                frameBorder="0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </div>
+
     <script>
         // Tab navigation
         const navBtns = document.querySelectorAll('.nav-btn');
@@ -317,181 +339,66 @@
             });
         });
 
-        // Spotify Player Integration
-        const playlistId = "1ADJ6f0Zg0zqL45x444ex8";
-        let accessToken = null;
-        let tracks = [];
-        let currentTrack = 0;
-        let player = null;
-        let deviceId = null;
-        let isPlaying = false;
-
+        // Spotify Player Controls
         const trackInfo = document.getElementById("track-info");
         const statusDiv = document.getElementById("status");
         const playBtn = document.getElementById("play-btn");
         const prevBtn = document.getElementById("prev-btn");
         const nextBtn = document.getElementById("next-btn");
+        const spotifyOverlay = document.getElementById("spotify-overlay");
+        const closePlayerBtn = document.getElementById("close-player");
+        
+        let isPlayerOpen = false;
 
-        playBtn.disabled = true;
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
-
-        async function getAccessToken() {
-            trackInfo.textContent = "Authentication required";
-            statusDiv.textContent = "Please authenticate with Spotify";
-            
-            const clientId = 'c5729e5464b740f9a9a96bb74d4add9d';
-            const redirectUri = window.location.origin + window.location.pathname;
-            const scopes = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
-            
-            const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            
-            if (params.get('access_token')) {
-                accessToken = params.get('access_token');
-                window.location.hash = '';
-                initPlayer();
-                return true;
-            }
-            
-            const loginBtn = document.createElement('button');
-            loginBtn.textContent = 'Login with Spotify';
-            loginBtn.style.cssText = 'margin-left: 20px; padding: 8px 16px; background: #1DB954; color: white; border: none; border-radius: 20px; cursor: pointer; font-family: "cofo-sans-pixel", sans-serif;';
-            loginBtn.onclick = () => {
-                const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
-                window.location.href = authUrl;
-            };
-            trackInfo.appendChild(loginBtn);
-            
-            return false;
-        }
-
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            if (accessToken) {
-                initPlayer();
-            }
-        };
-
-        async function initPlayer() {
-            player = new Spotify.Player({
-                name: 'Soulquarians Web Player',
-                getOAuthToken: cb => { cb(accessToken); },
-                volume: 0.5
-            });
-
-            player.addListener('initialization_error', ({ message }) => {
-                statusDiv.textContent = 'Init error: ' + message;
-            });
-            player.addListener('authentication_error', ({ message }) => {
-                statusDiv.textContent = 'Auth error: ' + message;
-            });
-            player.addListener('account_error', ({ message }) => {
-                statusDiv.textContent = 'Account error (Premium required): ' + message;
-            });
-
-            player.addListener('ready', ({ device_id }) => {
-                deviceId = device_id;
-                statusDiv.textContent = 'Player ready!';
-                loadPlaylistTracks();
-                
-                playBtn.disabled = false;
-                prevBtn.disabled = false;
-                nextBtn.disabled = false;
-            });
-
-            player.addListener('player_state_changed', state => {
-                if (!state) return;
-                
-                isPlaying = !state.paused;
-                playBtn.innerHTML = `<span class="material-symbols-outlined">${isPlaying ? "pause" : "play_arrow"}</span>`;
-                
-                if (state.track_window.current_track) {
-                    const track = state.track_window.current_track;
-                    trackInfo.textContent = `${track.name} - ${track.artists.map(a => a.name).join(", ")}`;
-                }
-            });
-
-            player.connect();
-        }
-
-        async function loadPlaylistTracks() {
-            try {
-                const res = await fetch(
-                    `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                );
-                
-                if (!res.ok) throw new Error('Failed to load playlist');
-                
-                const data = await res.json();
-                tracks = data.items.map(item => ({
-                    title: item.track.name,
-                    artist: item.track.artists.map(a => a.name).join(", "),
-                    uri: item.track.uri
-                }));
-                
-                statusDiv.textContent = `Loaded ${tracks.length} tracks`;
-                updateTrackDisplay();
-            } catch (error) {
-                statusDiv.textContent = 'Error loading playlist: ' + error.message;
-            }
-        }
-
-        function updateTrackDisplay() {
-            if (tracks.length > 0) {
-                const t = tracks[currentTrack];
-                if (!isPlaying) {
-                    trackInfo.textContent = `${t.title} - ${t.artist}`;
-                }
-            }
-        }
-
-        async function playTrack(uri) {
-            try {
-                await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-                    method: "PUT",
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ uris: [uri] })
-                });
-            } catch (error) {
-                statusDiv.textContent = 'Playback error: ' + error.message;
-            }
-        }
-
+        // Play button - opens overlay with Spotify player
         playBtn.addEventListener("click", () => {
-            if (isPlaying) {
-                player.pause();
+            if (!isPlayerOpen) {
+                spotifyOverlay.style.display = "flex";
+                isPlayerOpen = true;
+                playBtn.innerHTML = '<span class="material-symbols-outlined">pause</span>';
+                statusDiv.textContent = "Player open - Use controls in player";
             } else {
-                if (tracks.length > 0) {
-                    playTrack(tracks[currentTrack].uri);
-                }
+                spotifyOverlay.style.display = "none";
+                isPlayerOpen = false;
+                playBtn.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
+                statusDiv.textContent = "Click play to start";
+            }
+        });
+
+        // Close button in overlay
+        closePlayerBtn.addEventListener("click", () => {
+            spotifyOverlay.style.display = "none";
+            isPlayerOpen = false;
+            playBtn.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
+            statusDiv.textContent = "Click play to start";
+        });
+
+        // Close overlay when clicking outside the player
+        spotifyOverlay.addEventListener("click", (e) => {
+            if (e.target === spotifyOverlay) {
+                spotifyOverlay.style.display = "none";
+                isPlayerOpen = false;
+                playBtn.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
+                statusDiv.textContent = "Click play to start";
+            }
+        });
+
+        // Previous and Next buttons
+        prevBtn.addEventListener("click", () => {
+            if (!isPlayerOpen) {
+                statusDiv.textContent = "Open player first to control tracks";
+            } else {
+                statusDiv.textContent = "Use prev/next in the player above";
             }
         });
 
         nextBtn.addEventListener("click", () => {
-            if (tracks.length > 0) {
-                currentTrack = (currentTrack + 1) % tracks.length;
-                updateTrackDisplay();
-                if (isPlaying) {
-                    playTrack(tracks[currentTrack].uri);
-                }
+            if (!isPlayerOpen) {
+                statusDiv.textContent = "Open player first to control tracks";
+            } else {
+                statusDiv.textContent = "Use prev/next in the player above";
             }
         });
-
-        prevBtn.addEventListener("click", () => {
-            if (tracks.length > 0) {
-                currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
-                updateTrackDisplay();
-                if (isPlaying) {
-                    playTrack(tracks[currentTrack].uri);
-                }
-            }
-        });
-
-        getAccessToken();
     </script>
 </body>
 </html>
